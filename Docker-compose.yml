@@ -1,0 +1,27 @@
+version: '3'
+services:
+  app:
+    build: .docker/app
+    ports:
+      - 5000:5000
+    links:
+      - db
+    volumes:  
+      - .:/go/src/github.com/uzimaru0000/todo
+    command: bash -c 'cd /go/src/github.com/uzimaru0000/todo && go run main.go'
+    container_name: todo-server
+  db:
+    image: mysql:latest
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql-data:/data/db
+    container_name: todo-database
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
+      MYSQL_DATABASE: todo
+volumes:
+  mysql-data:
+    driver: local
