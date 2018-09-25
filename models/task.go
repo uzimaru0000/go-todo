@@ -21,14 +21,9 @@ func NewTask(title string, time time.Time) *Task {
 	}
 }
 
-func GetTaskById(id uint) *Task {
-	task := Task{ID: id}
-	engine := DBConnect()
-	has, _ := engine.Get(&task)
-	if has {
-		return &task
-	}
-	return nil
+func (t *Task) GetTaskById() error {
+	_, err := DBConnect().Get(t)
+	return err
 }
 
 func GetAllTasks() []Task {

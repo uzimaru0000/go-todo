@@ -30,14 +30,15 @@ func TaskPost(c *gin.Context) {
 
 func TaskPatch(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
-	task := models.GetTaskById(uint(id))
-	if task == nil {
-		c.JSON(http.StatusNotFound, gin.H{"message": c.Param("id") + " is not found."})
+	task := models.Task{ID: uint(id)}
+	err := task.GetTaskById()
+	if err != nil {
+		c.JSON(http.StatusNotFound, err.Error())
 		return
 	}
 
 	title := c.PostForm("title")
-	err := task.Update(title)
+	err = task.Update(title)
 	if err != nil {
 		c.JSON(500, gin.H{"message": err.Error()})
 		return
@@ -48,13 +49,14 @@ func TaskPatch(c *gin.Context) {
 
 func TaskDelete(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
-	task := models.GetTaskById(uint(id))
-	if task == nil {
-		c.JSON(http.StatusNotFound, gin.H{"message": c.Param("id") + " is not found."})
+	task := models.Task{ID: uint(id)}
+	err := task.GetTaskById()
+	if err != nil {
+		c.JSON(http.StatusNotFound, err.Error())
 		return
 	}
 
-	err := task.Delete()
+	err = task.Delete()
 	if err != nil {
 		c.JSON(500, gin.H{"message": err.Error()})
 		return
